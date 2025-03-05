@@ -10,6 +10,9 @@ cluster.init()
 
 # Connect to the cluster
 from dask.distributed import Client
+import dask.dataframe as dd
+import dask.multiprocessing
+
 client = Client(cluster.get_client_url())
 
 client
