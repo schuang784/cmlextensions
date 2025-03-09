@@ -12,7 +12,6 @@
 
 import os
 import cdsw
-import pandas
 
 # PBJ Runtimes do not have the cdsw library installed.
 # Instead, the cml library is added to workloads in recent CML releases.
