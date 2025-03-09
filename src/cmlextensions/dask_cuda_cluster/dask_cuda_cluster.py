@@ -13,6 +13,14 @@
 import os
 import cdsw
 
+# PBJ Runtimes do not have the cdsw library installed.
+# Instead, the cml library is added to workloads in recent CML releases.
+try:
+    import cml.utils_v1 as utils
+    cdsw = utils._emulate_cdsw()
+except ImportError:
+    import cdsw
+
 DEFAULT_DASHBOARD_PORT = os.environ["CDSW_APP_PORT"]
 
 
