@@ -11,7 +11,7 @@
 # use of the file.
 
 import os
-import cdsw
+#import cdsw
 
 # PBJ Runtimes do not have the cdsw library installed.
 # Instead, the cml library is added to workloads in recent CML releases.
