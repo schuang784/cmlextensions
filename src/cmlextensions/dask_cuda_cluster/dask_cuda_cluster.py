@@ -85,7 +85,7 @@ class DaskCudaCluster:
         dask_workers = cdsw.launch_workers(**args)
 
         self.dask_worker_details = cdsw.await_workers(
-            dask_workers, wait_for_completion=False
+            dask_workers, wait_for_completion=True
         )
 
     def get_client_url(self):
