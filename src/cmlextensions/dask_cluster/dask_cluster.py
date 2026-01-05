@@ -1,4 +1,4 @@
-# Copyright 2022 Cloudera. All Rights Reserved.
+# Copyright 2026 Cloudera. All Rights Reserved.
 #
 # This file is licensed under the Apache License Version 2.0
 # (the "License"). You may not use this file except in compliance
@@ -26,10 +26,11 @@ class DaskCluster:
     def __init__(
         self,
         num_workers,
-        worker_cpu,
-        worker_memory,
-        scheduler_cpu,
-        scheduler_memory,
+        worker_cpu=2,
+        worker_memory=4,
+        scheduler_cpu=2,
+        scheduler_memory=4,
+        nvidia_gpu=0,
         dashboard_port=DEFAULT_DASHBOARD_PORT,
     ):
         self.num_workers = num_workers
@@ -38,6 +39,7 @@ class DaskCluster:
         self.scheduler_cpu = scheduler_cpu
         self.scheduler_memory = scheduler_memory
         self.dashboard_port = dashboard_port
+        self.nvidia_gpu = nvidia_gpu
 
         self.dask_scheduler_details = None
         self.dask_worker_details = None
@@ -48,6 +50,7 @@ class DaskCluster:
         args = {
             'n': 1,
             'cpu': self.scheduler_cpu,
+            'nvidia_gpu': self.nvidia_gpu,
             'memory': self.scheduler_memory,
             'code': dask_scheduler_cmd,
         }
@@ -55,10 +58,13 @@ class DaskCluster:
         if hasattr(cdsw.launch_workers, 'name'):
             args['name'] = 'Dask Scheduler'
 
+        if args.get("nvidia_gpu") == 0:
+            args.pop("nvidia_gpu", None)
+
         dask_scheduler = cdsw.launch_workers(**args)
 
         self.dask_scheduler_details = cdsw.await_workers(
-            dask_scheduler, wait_for_completion=False, timeout_seconds=90
+            dask_scheduler, wait_for_completion=False, timeout_seconds=300
         )
 
     def _add_dask_workers(self, scheduler_addr):
@@ -68,11 +74,15 @@ class DaskCluster:
             'n': self.num_workers,
             'cpu': self.worker_cpu,
             'memory': self.worker_memory,
+            'nvidia_gpu': self.nvidia_gpu,
             'code': worker_start_cmd,
         }
 
         if hasattr(cdsw.launch_workers, 'name'):
             args['name'] = 'Dask Worker'
+
+        if args.get("nvidia_gpu") == 0:
+            args.pop("nvidia_gpu", None)
 
         dask_workers = cdsw.launch_workers(**args)
 

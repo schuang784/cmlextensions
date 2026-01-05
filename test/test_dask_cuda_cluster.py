@@ -1,11 +1,23 @@
+#!pip install dask distributed dask-cuda
+#!pip install dask
+#!pip install cloudpickle
+#!pip install 'dask[dataframe]'
+#!pip install 'dask[complete]'
+#!pip install "bokeh!=3.0.*,>=2.4.2"
+
+#!pip install \
+#    --extra-index-url=https://pypi.nvidia.com \
+#    cudf-cu12==24.6.* cuml-cu12==24.6.* \
+#    cugraph-cu12==24.6.*
+
 # Add cmlextensions to the path
 import sys
 sys.path.append('../src')
 
 #from dask_cuda import LocalCUDACluster
-from src.cmlextensions.dask_cuda_cluster.dask_cuda_cluster import DaskCudaCluster
+from src.cmlextensions.dask_cluster.dask_cluster import DaskCluster
 
-cluster = DaskCudaCluster(num_workers=2, worker_cpu=4, nvidia_gpu=2, worker_memory=12, scheduler_cpu=4, scheduler_memory=12)
+cluster = DaskCluster(num_workers=2, worker_cpu=4, nvidia_gpu=2, worker_memory=12, scheduler_cpu=4, scheduler_memory=12)
 cluster.init()
 
 # Connect to the cluster
