@@ -56,6 +56,30 @@ use the following Python code:
   client = Client('tcp://100.100.225.149:8786')
 ```
 
+### Dask Cuda
+Dask CUDA is a library that integrates Dask with NVIDIA CUDA to enable scalable, distributed computing on GPUs. It provides tools for managing GPU resources, scheduling GPU-aware tasks, and efficiently moving data between CPUs and GPUs across single machines or clusters. Dask CUDA is commonly used with RAPIDS libraries to accelerate data processing, machine learning, and analytics workflows on NVIDIA GPUs.
+
+Example usage:
+```
+> from cmlextensions.dask_cluster import DaskCluster
+
+> cluster = DaskCluster(num_workers=2, worker_cpu=4, nvidia_gpu=2, worker_memory=12, scheduler_cpu=4, scheduler_memory=12)
+> cluster.init()
+
+--------------------
+Dask cluster started
+--------------------
+
+The Dask dashboard is running at
+https://024d0wpuw0eain8r.ml-4c5feac0-3ec.go01-dem.ylcu-atmi.cloudera.site/
+
+To connect to this Dask cluster from this CML Session,
+use the following Python code:
+  from dask.distributed import Client
+  client = Client('tcp://100.100.225.149:8786')
+```
+
+
 ### Workers_v2
 The cml (or legacy cdsw) library has a workers module already. The v2 module is experimenting with a new management interface for the CML Workers infrastructure. The v2 module has more defaults and a more OOP approach for managing groups of workers. There is no added functionality, the v2 library relies on the functionality available in the orignal version.
 
