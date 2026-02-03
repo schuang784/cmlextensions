@@ -12,7 +12,10 @@
 
 # Add cmlextensions to the path
 import sys
-sys.path.append('../src')
+import os
+current_dir = os.path.dirname(os.path.abspath(__file__))
+cmlextensions_src = os.path.join(current_dir, '..', 'src')
+sys.path.append(cmlextensions_src)
 
 #from dask_cuda import LocalCUDACluster
 from src.cmlextensions.dask_cluster.dask_cluster import DaskCluster
