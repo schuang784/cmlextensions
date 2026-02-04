@@ -13,7 +13,12 @@
 # Add cmlextensions to the path
 import sys
 import os
-current_dir = os.path.dirname(os.path.abspath(__file__))
+
+try:
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+except NameError:
+    current_dir = os.getcwd()
+
 cmlextensions_src = os.path.join(current_dir, '..', 'src')
 sys.path.append(cmlextensions_src)
 
