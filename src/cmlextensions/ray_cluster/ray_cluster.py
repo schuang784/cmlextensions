@@ -28,7 +28,7 @@ class RayCluster():
     """Ray Cluster built on CML Worker infrastructure"""
 
     def __init__(self, num_workers, worker_cpu=2, worker_memory=4, worker_nvidia_gpu=0, head_cpu=2, head_memory=4, head_nvidia_gpu=0,  dashboard_port=DEFAULT_DASHBOARD_PORT, env
-={}):
+={}, head_system_configs={}):
         self.num_workers = num_workers
         self.worker_cpu = worker_cpu
         self.worker_memory = worker_memory
@@ -38,9 +38,11 @@ class RayCluster():
         self.head_nvidia_gpu = head_nvidia_gpu
         self.dashboard_port = dashboard_port
         self.env = env
+        self.head_system_configs = head_system_configs
 
         self.ray_head_details = None
         self.ray_worker_details = None
+
 
     def _stop_ray_workloads(self):
         for workload_details in [self.ray_head_details, self.ray_worker_details]:
@@ -70,14 +72,14 @@ class RayCluster():
           timeout_seconds=startup_timeout_seconds
         )
         return workload_details
-                
-        
 
 
     def _start_ray_head(self, startup_timeout_seconds):
         # We need to start the ray process with --block else the command completes and the CML Worker terminates
-        head_start_cmd = f"!ray start --head --block --disable-usage-stats --num-cpus={self.head_cpu} --num-gpus={self.head_nvidia_gpu} --include-dashboard=true --dashboard-port={self.dashboard_port}"
-
+        if self.head_system_configs:
+            head_start_cmd = f"!ray start --head --block --disable-usage-stats --num-cpus={self.head_cpu} --num-gpus={self.head_nvidia_gpu} --include-dashboard=true --dashboard-port={self.dashboard_port} --system-config={self.head_system_configs}"
+        else:
+            head_start_cmd = f"!ray start --head --block --disable-usage-stats --num-cpus={self.head_cpu} --num-gpus={self.head_nvidia_gpu} --include-dashboard=true --dashboard-port={self.dashboard_port}"
         args = {
             'n': 1,
             'cpu': self.head_cpu,
