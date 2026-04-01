@@ -11,6 +11,12 @@
 # use of the file.
 
 import os
+try:
+    import cml.utils_v1 as utils
+    cdsw = utils._emulate_cdsw()
+except ImportError:
+    import cdsw
+
 
 DEFAULT_DASHBOARD_PORT = os.environ["CDSW_APP_PORT"]
 
