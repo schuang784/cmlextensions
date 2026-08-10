@@ -92,9 +92,9 @@ Example usage with Ray:
 ...     worker_memory=16,
 ...     worker_nvidia_gpu=2,
 ...     worker_rdma=2,
-...     worker_rdma_network_label_id=10,
+...     worker_rdma_network_selections=[{"network_label_id": 10, "quantity": 2}],
 ...     head_rdma=1,
-...     head_rdma_network_label_id=10,
+...     head_rdma_network_selections=[{"network_label_id": 10, "quantity": 1}],
 ... )
 > cluster.init()
 ```
@@ -124,7 +124,7 @@ Example usage with WorkerGroup:
 ...     memory=16,
 ...     nvidia_gpu=2,
 ...     rdma=2,
-...     rdma_network_label_id=10,
+...     rdma_network_selections=[{"network_label_id": 10, "quantity": 2}],
 ...     code="print('Hello from a worker with RDMA')",
 ... )
 ```

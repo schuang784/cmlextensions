@@ -74,7 +74,6 @@ class WorkerGroup():
         wait_for_completion=False,
         timeout_seconds=90,
         rdma=0,
-        rdma_network_label_id=None,
         rdma_network_selections=None,
     ):
 
@@ -94,7 +93,6 @@ class WorkerGroup():
             launch_args,
             cdsw.launch_workers,
             rdma=rdma,
-            rdma_network_label_id=rdma_network_label_id,
             rdma_network_selections=rdma_network_selections,
         )
 
