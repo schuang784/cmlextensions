@@ -1,4 +1,3 @@
-import inspect
 import sys
 import os
 import unittest
@@ -18,56 +17,37 @@ def _launch_workers_with_rdma(
     memory,
     nvidia_gpu=0,
     code="",
-    rdma=0,
     rdma_network_selections=None,
 ):
     pass
 
 
 class TestAddRdmaLaunchArgs(unittest.TestCase):
-    def test_adds_rdma_params_when_supported(self):
+    def test_adds_rdma_network_selections_when_supported(self):
         args = {"n": 1, "cpu": 2, "memory": 4}
+        selections = [{"network_label_id": 10, "quantity": 2}]
         add_rdma_launch_args(
             args,
             _launch_workers_with_rdma,
-            rdma=2,
-            rdma_network_selections=[{"network_label_id": 10, "quantity": 2}],
+            rdma_network_selections=selections,
         )
-        self.assertEqual(args["rdma"], 2)
-        self.assertEqual(
-            args["rdma_network_selections"],
-            [{"network_label_id": 10, "quantity": 2}],
-        )
-
-    def test_omits_zero_rdma(self):
-        args = {"n": 1, "cpu": 2, "memory": 4}
-        add_rdma_launch_args(
-            args,
-            _launch_workers_with_rdma,
-            rdma=0,
-            rdma_network_selections=[{"network_label_id": 10, "quantity": 2}],
-        )
+        self.assertEqual(args["rdma_network_selections"], selections)
         self.assertNotIn("rdma", args)
-        self.assertEqual(
-            args["rdma_network_selections"],
-            [{"network_label_id": 10, "quantity": 2}],
-        )
 
-    def test_skips_rdma_params_when_unsupported(self):
+    def test_skips_rdma_network_selections_when_unsupported(self):
         args = {"n": 1, "cpu": 2, "memory": 4}
         add_rdma_launch_args(
             args,
             _launch_workers_without_rdma,
-            rdma=2,
             rdma_network_selections=[{"network_label_id": 10, "quantity": 2}],
         )
         self.assertEqual(args, {"n": 1, "cpu": 2, "memory": 4})
 
-    def test_omits_none_optional_params(self):
+    def test_omits_none_rdma_network_selections(self):
         args = {"n": 1, "cpu": 2, "memory": 4}
-        add_rdma_launch_args(args, _launch_workers_with_rdma, rdma=2)
-        self.assertEqual(args["rdma"], 2)
+        add_rdma_launch_args(args, _launch_workers_with_rdma)
         self.assertNotIn("rdma_network_selections", args)
+        self.assertNotIn("rdma", args)
 
 
 if __name__ == "__main__":

@@ -34,7 +34,6 @@ class DaskCluster:
         scheduler_memory=4,
         nvidia_gpu=0,
         dashboard_port=DEFAULT_DASHBOARD_PORT,
-        rdma=0,
         rdma_network_selections=None,
     ):
         self.num_workers = num_workers
@@ -44,7 +43,6 @@ class DaskCluster:
         self.scheduler_memory = scheduler_memory
         self.dashboard_port = dashboard_port
         self.nvidia_gpu = nvidia_gpu
-        self.rdma = rdma
         self.rdma_network_selections = rdma_network_selections
 
         self.dask_scheduler_details = None
@@ -70,7 +68,6 @@ class DaskCluster:
         add_rdma_launch_args(
             args,
             cdsw.launch_workers,
-            rdma=self.rdma,
             rdma_network_selections=self.rdma_network_selections,
         )
 
@@ -100,7 +97,6 @@ class DaskCluster:
         add_rdma_launch_args(
             args,
             cdsw.launch_workers,
-            rdma=self.rdma,
             rdma_network_selections=self.rdma_network_selections,
         )
 

@@ -40,9 +40,7 @@ class RayCluster():
         head_nvidia_gpu=0,
         dashboard_port=DEFAULT_DASHBOARD_PORT,
         env={},
-        head_rdma=0,
         head_rdma_network_selections=None,
-        worker_rdma=0,
         worker_rdma_network_selections=None,
     ):
         self.num_workers = num_workers
@@ -54,9 +52,7 @@ class RayCluster():
         self.head_nvidia_gpu = head_nvidia_gpu
         self.dashboard_port = dashboard_port
         self.env = env
-        self.head_rdma = head_rdma
         self.head_rdma_network_selections = head_rdma_network_selections
-        self.worker_rdma = worker_rdma
         self.worker_rdma_network_selections = worker_rdma_network_selections
 
         self.ray_head_details = None
@@ -109,7 +105,6 @@ class RayCluster():
         add_rdma_launch_args(
             args,
             cdsw.launch_workers,
-            rdma=self.head_rdma,
             rdma_network_selections=self.head_rdma_network_selections,
         )
 
@@ -133,7 +128,6 @@ class RayCluster():
         add_rdma_launch_args(
             args,
             cdsw.launch_workers,
-            rdma=self.worker_rdma,
             rdma_network_selections=self.worker_rdma_network_selections,
         )
 
