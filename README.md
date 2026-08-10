@@ -79,6 +79,55 @@ use the following Python code:
   client = Client('tcp://100.100.225.149:8786')
 ```
 
+### RDMA network support
+When your CML workspace has RDMA network labels configured, you can request RDMA resources when launching workers. RDMA parameters are forwarded to `cml.workers_v1.launch_workers()` (or legacy `cdsw.launch_workers()`). On older runtimes that do not support RDMA, these parameters are omitted automatically.
+
+Example usage with Ray:
+```
+> from cmlextensions.ray_cluster import RayCluster
+
+> cluster = RayCluster(
+...     num_workers=4,
+...     worker_cpu=4,
+...     worker_memory=16,
+...     worker_nvidia_gpu=2,
+...     worker_rdma=2,
+...     worker_rdma_network_label_id=10,
+...     head_rdma=1,
+...     head_rdma_network_label_id=10,
+... )
+> cluster.init()
+```
+
+Example usage with Dask:
+```
+> from cmlextensions.dask_cluster import DaskCluster
+
+> cluster = DaskCluster(
+...     num_workers=4,
+...     worker_cpu=4,
+...     worker_memory=16,
+...     nvidia_gpu=2,
+...     rdma=2,
+...     rdma_network_selections=[{"network_label_id": 10, "quantity": 2}],
+... )
+> cluster.init()
+```
+
+Example usage with WorkerGroup:
+```
+> from cmlextensions.workers_v2 import WorkerGroup
+
+> wg = WorkerGroup(
+...     n=4,
+...     cpu=4,
+...     memory=16,
+...     nvidia_gpu=2,
+...     rdma=2,
+...     rdma_network_label_id=10,
+...     code="print('Hello from a worker with RDMA')",
+... )
+```
 
 ### Workers_v2
 The cml (or legacy cdsw) library has a workers module already. The v2 module is experimenting with a new management interface for the CML Workers infrastructure. The v2 module has more defaults and a more OOP approach for managing groups of workers. There is no added functionality, the v2 library relies on the functionality available in the orignal version.
