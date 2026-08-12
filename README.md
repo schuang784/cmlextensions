@@ -80,7 +80,7 @@ use the following Python code:
 ```
 
 ### RDMA network support
-When your CML workspace has RDMA network labels configured, you can request RDMA resources when launching workers. RDMA parameters are forwarded to `cml.workers_v1.launch_workers()` (or legacy `cdsw.launch_workers()`). On older runtimes that do not support RDMA, these parameters are omitted automatically.
+When your CML workspace has RDMA network labels configured, you can request RDMA resources when launching workers. Specify RDMA networks by label name (the `label_value` stored for `rdma.network.name` in the node labels table). cmlextensions resolves names to internal IDs via `cmlapi` before calling `launch_workers()`. On older runtimes that do not support RDMA, these parameters are omitted automatically.
 
 Example usage with Ray:
 ```
@@ -91,8 +91,8 @@ Example usage with Ray:
 ...     worker_cpu=4,
 ...     worker_memory=16,
 ...     worker_nvidia_gpu=2,
-...     worker_rdma_network_selections=[{"network_label_id": 10, "quantity": 2}],
-...     head_rdma_network_selections=[{"network_label_id": 10, "quantity": 1}],
+...     worker_rdma_network_selections=[{"network_label": "default/sriovib-network", "quantity": 2}],
+...     head_rdma_network_selections=[{"network_label": "default/sriovib-network", "quantity": 1}],
 ... )
 > cluster.init()
 ```
@@ -106,7 +106,7 @@ Example usage with Dask:
 ...     worker_cpu=4,
 ...     worker_memory=16,
 ...     nvidia_gpu=2,
-...     rdma_network_selections=[{"network_label_id": 10, "quantity": 2}],
+...     rdma_network_selections=[{"network_label": "default/roce-network", "quantity": 2}],
 ... )
 > cluster.init()
 ```
@@ -120,7 +120,7 @@ Example usage with WorkerGroup:
 ...     cpu=4,
 ...     memory=16,
 ...     nvidia_gpu=2,
-...     rdma_network_selections=[{"network_label_id": 10, "quantity": 2}],
+...     rdma_network_selections=[{"network_label": "default/sriovib-network", "quantity": 2}],
 ...     code="print('Hello from a worker with RDMA')",
 ... )
 ```

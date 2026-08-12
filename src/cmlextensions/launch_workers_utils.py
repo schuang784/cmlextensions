@@ -12,14 +12,24 @@
 
 import inspect
 
+from cmlextensions.rdma_network_utils import resolve_rdma_network_selections
+
 
 def add_rdma_launch_args(
     args,
     launch_workers_fn,
     rdma_network_selections=None,
+    list_labels_fn=None,
 ):
-    """Add RDMA network selections to launch_workers args when supported by the API."""
+    """Add resolved RDMA network selections to launch_workers args when supported."""
     params = inspect.signature(launch_workers_fn).parameters
-    if "rdma_network_selections" in params and rdma_network_selections is not None:
-        args["rdma_network_selections"] = rdma_network_selections
+    if "rdma_network_selections" not in params or rdma_network_selections is None:
+        return args
+
+    resolved_selections = resolve_rdma_network_selections(
+        rdma_network_selections,
+        list_labels_fn=list_labels_fn,
+    )
+    if resolved_selections is not None:
+        args["rdma_network_selections"] = resolved_selections
     return args
