@@ -11,6 +11,7 @@
 # use of the file.
 
 import inspect
+import warnings
 
 from cmlextensions.rdma_network_utils import resolve_rdma_network_selections
 
@@ -22,8 +23,18 @@ def add_rdma_launch_args(
     list_labels_fn=None,
 ):
     """Add resolved RDMA network selections to launch_workers args when supported."""
+    if rdma_network_selections is None:
+        return args
+
     params = inspect.signature(launch_workers_fn).parameters
-    if "rdma_network_selections" not in params or rdma_network_selections is None:
+    if "rdma_network_selections" not in params:
+        warnings.warn(
+            "rdma_network_selections was provided but this CML workspace's "
+            "launch_workers API does not support it; RDMA network settings "
+            "will be ignored. Upgrade your CML runtime to use RDMA networks.",
+            UserWarning,
+            stacklevel=2,
+        )
         return args
 
     resolved_selections = resolve_rdma_network_selections(

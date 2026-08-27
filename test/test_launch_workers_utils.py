@@ -1,6 +1,7 @@
 import sys
 import os
 import unittest
+import warnings
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
@@ -142,15 +143,21 @@ class TestAddRdmaLaunchArgs(unittest.TestCase):
 
     def test_skips_rdma_network_selections_when_unsupported(self):
         args = {"n": 1, "cpu": 2, "memory": 4}
-        add_rdma_launch_args(
-            args,
-            _launch_workers_without_rdma,
-            rdma_network_selections=[
-                {"network_label": "default/sriovib-network", "quantity": 2}
-            ],
-            list_labels_fn=lambda: _sample_rdma_labels(),
-        )
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always")
+            add_rdma_launch_args(
+                args,
+                _launch_workers_without_rdma,
+                rdma_network_selections=[
+                    {"network_label": "default/sriovib-network", "quantity": 2}
+                ],
+                list_labels_fn=lambda: _sample_rdma_labels(),
+            )
         self.assertEqual(args, {"n": 1, "cpu": 2, "memory": 4})
+        self.assertEqual(len(caught), 1)
+        self.assertIs(caught[0].category, UserWarning)
+        self.assertIn("rdma_network_selections", str(caught[0].message))
+        self.assertIn("will be ignored", str(caught[0].message))
 
     def test_omits_none_rdma_network_selections(self):
         args = {"n": 1, "cpu": 2, "memory": 4}
