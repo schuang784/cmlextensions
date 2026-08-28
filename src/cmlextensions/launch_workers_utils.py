@@ -31,7 +31,7 @@ def add_rdma_launch_args(
         warnings.warn(
             "rdma_network_selections was provided but this CML workspace's "
             "launch_workers API does not support it; RDMA network settings "
-            "will be ignored. Upgrade your CML runtime to use RDMA networks.",
+            "will be ignored. Upgrade your Cloudera AI Workbench to use RDMA networks.",
             UserWarning,
             stacklevel=2,
         )
